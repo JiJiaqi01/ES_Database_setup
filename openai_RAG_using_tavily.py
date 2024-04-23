@@ -57,12 +57,12 @@ def openai_rag(question):
     #use tavily as source
     #find the api-key
     tavily_api_key=getenv("TAVILY_API_KEY",'tvly-xxxx')
-    
+
     #此处由于我的电脑不知道为什么获取不到环境变量所以手动命名来测试
     #tavily = TavilyClient(api_key="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")
 
     tavily = TavilyClient(api_key=tavily_api_key)
-    
+
     #first use tavily to surf answer
     res=tavily.search(question)
 
@@ -74,21 +74,21 @@ def openai_rag(question):
     #count for counting id
     count=1
     #add reference
-    reference= "###Reference"+"\n"
+    reference= "### Reference"+"\n"
     #add url list
     url_list=""
-    
+
     #use for loop to get every element in the results dict
     for item in results:
         content=item['content']
         line="\n"+f"""<doc id={count}> """+content+"</doc>"
         context=context+line
-        reference_line="\n"+f"""-[[{count}] """+item['title']+f""" ({item['url']})"""
+        reference_line="\n"+f"""- [[{count}] """+item['title']+f"""]({item['url']})"""
         reference=reference+reference_line
-        url_line=f"""[\[{count}\]]:{item['url']}"""+"\n"
+        url_line=f"""[\[{count}\]]: {item['url']}"""+"\n"
         url_list=url_list+url_line
         count=count+1
-        
+
     #results is a list with several dictionary in each index
     current_time=datetime.now()
     cdate=str(current_time.year)+"/"+str(current_time.month)+"/"+str(current_time.day)
@@ -97,7 +97,7 @@ def openai_rag(question):
     #此处直接使用openai中转点的api,如果后续有官方的api可调整变量
     llm=ChatOpenAI(base_url='https://api.chatanywhere.com.cn/v1',api_key='sk-AUnJk0FMih4MJp32GAyNzEQRi5KtVeiZlvRU6tROmaOAFvD9')
 
-    
+
     #create a llm_chain
     llm_chain = LLMChain(prompt=prompt, llm=llm)
 
@@ -108,10 +108,9 @@ def openai_rag(question):
             "context": context
         }
     )
-    
-    
+
+
     ans=answer['text']
 
     final_answer=ans+"\n"+"\n"+"\n"+reference+"\n"+"\n"+"\n"+url_list
     return final_answer
-
