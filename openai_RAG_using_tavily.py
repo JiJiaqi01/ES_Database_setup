@@ -73,12 +73,21 @@ def openai_rag(question):
     context="<context>"
     #count for counting id
     count=1
+    #add reference
+    reference= "###Reference"+"\n"
+    #add url list
+    url_list=""
+    
     #use for loop to get every element in the results dict
     for item in results:
         content=item['content']
         line="\n"+f"""<doc id={count}> """+content+"</doc>"
-        count=count+1
         context=context+line
+        reference_line="\n"+f"""-[[{count}] """+item['title']+f""" ({item['url']})"""
+        reference=reference+reference_line
+        url_line=f"""[\[{count}\]]:{item['url']}"""+"\n"
+        url_list=url_list+url_line
+        count=count+1
         
     #results is a list with several dictionary in each index
     current_time=datetime.now()
@@ -99,6 +108,10 @@ def openai_rag(question):
             "context": context
         }
     )
+    
+    
     ans=answer['text']
-    return ans
+
+    final_answer=ans+"\n"+"\n"+"\n"+reference+"\n"+"\n"+"\n"+url_list
+    return final_answer
 
