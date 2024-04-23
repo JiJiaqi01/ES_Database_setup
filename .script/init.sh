@@ -5,4 +5,4 @@ cd $workspace
 
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -U -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
+pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
