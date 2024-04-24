@@ -95,7 +95,7 @@ def openai_rag(question):
 
     #use Open AI as our model
     #此处直接使用openai中转点的api,如果后续有官方的api可调整变量
-    llm=ChatOpenAI(base_url='https://api.chatanywhere.com.cn/v1',api_key='sk-AUnJk0FMih4MJp32GAyNzEQRi5KtVeiZlvRU6tROmaOAFvD9')
+    llm=ChatOpenAI(base_url='https://api.chatanywhere.com.cn/v1',api_key='sk-AUnJk0FMih4MJp32GAyNzEQRi5KtVeiZlvRU6tROmaOAFvD9', model='gpt-3.5-turbo-0125')
 
 
     #create a llm_chain
