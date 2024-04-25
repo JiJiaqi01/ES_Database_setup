@@ -60,6 +60,8 @@ def openai_rag(question):
 
     tavily = TavilyClient(api_key=tavily_api_key)
 
+    #以下代码限制域名
+    '''
     #set search domain
     domains=["www.eia.gov","ww2.arb.ca.gov","www.iata.org","biofuels-news.com","www.spglobal.com","commission.europa.eu"]
 
@@ -102,7 +104,32 @@ def openai_rag(question):
                 break
             break_number=break_number+1
 
+    '''
+    #generate context
+    context="<context>"
+    #count for counting id
+    count=1
+    #add reference
+    reference= "### Reference"+"\n"
+    #add url list
+    url_list=""
 
+    #first use tavily to surf answer
+    res=tavily.search(question)
+    #res is a dictionary, get the results
+    results=res['results']
+    
+    #use for loop to get every element in the results dict
+    for item in results:
+        content=item['content']
+        line="\n"+f"""<doc id={count}> """+content+"</doc>"
+        context=context+line
+        reference_line="\n"+f"""- [[{count}] """+item['title']+f"""]({item['url']})"""
+        reference=reference+reference_line
+        url_line=f"""[\[{count}\]]: {item['url']}"""+"\n"
+        url_list=url_list+url_line
+        count=count+1
+    
     #results is a list with several dictionary in each index
     current_time=datetime.now()
     cdate=str(current_time.year)+"/"+str(current_time.month)+"/"+str(current_time.day)
