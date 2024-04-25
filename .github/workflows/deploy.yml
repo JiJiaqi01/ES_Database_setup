@@ -1,0 +1,23 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup private key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ID_RSA }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy
+        run: |
+          ssh -o StrictHostKeyChecking=no jaiqi@150.109.254.175 'cd $HOME/API-test; docker compose up -d --build'

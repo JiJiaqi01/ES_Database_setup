@@ -56,7 +56,7 @@ prompt = PromptTemplate.from_template(template)
 def openai_rag(question):
     #use tavily as source
     #find the api-key
-    tavily_api_key=getenv("TAVILY_API_KEY",'tvly-xxxx')
+    tavily_api_key=getenv("TAVILY_API_KEY",'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')
 
     #此处由于我的电脑不知道为什么获取不到环境变量所以手动命名来测试
     #tavily = TavilyClient(api_key="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")
