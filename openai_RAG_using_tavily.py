@@ -27,7 +27,7 @@ class Open_AI:
 
 
 #create a template for the chatbot
-template = """You must only use information from the provided search results.
+template = """You can only answer the question using information from the search results provided.
 Use an unbiased and journalistic tone. Combine search results together into a coherent answer.
 Do not repeat text. Cite search results using [\[number\]] notation.
 Only cite the most relevant results that answer the question accurately.
@@ -41,6 +41,8 @@ You should use bullet points in your answer for readability. Put citations where
 Anything between the following context html blocks is retrieved from a knowledge bank, not part of the conversation with the user.
 
 {context}
+
+question: {question}
 
 REMEMBER: If there is no relevant information within the context, don't try to make up an answer.
 Anything between the preceding 'context' html blocks is retrieved from a knowledge bank, not part of the conversation with the user.
@@ -68,7 +70,7 @@ def openai_rag(question):
     #first use tavily to surf answer
     #there are total six domains for search, each pick the highest two scores
     index=0
-    
+
     #generate context
     context="<context>"
     #count for counting id
@@ -115,10 +117,18 @@ def openai_rag(question):
     url_list=""
 
     #first use tavily to surf answer
-    res=tavily.search(question)
+    print(f'question: {question}')
+    res=tavily.search(
+        question,
+        include_domains=['www.eia.gov'],
+        include_answer=True,
+        # topic = "news",
+        # days = 14
+    ) or {}
+    print(f'answer: {res["answer"]}')
     #res is a dictionary, get the results
     results=res['results']
-    
+
     #use for loop to get every element in the results dict
     for item in results:
         content=item['content']
@@ -129,7 +139,7 @@ def openai_rag(question):
         url_line=f"""[\[{count}\]]: {item['url']}"""+"\n"
         url_list=url_list+url_line
         count=count+1
-    
+
     #results is a list with several dictionary in each index
     current_time=datetime.now()
     cdate=str(current_time.year)+"/"+str(current_time.month)+"/"+str(current_time.day)
@@ -146,7 +156,8 @@ def openai_rag(question):
     answer=llm_chain.invoke(
         {
             "current_date":cdate,
-            "context": context
+            "context": context,
+            "question": question,
         }
     )
 
