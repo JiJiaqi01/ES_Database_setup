@@ -22,10 +22,11 @@ async def search_futures_news(request: Request):
     res=openai_rag(question)
     return { "response": res, "status": "success" }
 
+
 if __name__ == "__main__":
   import uvicorn
   uvicorn.run(
     app = "main:app",
-    host = "127.0.0.1",
+    host = "0.0.0.0",
     port = 8000,
   )
