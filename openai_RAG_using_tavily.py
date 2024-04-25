@@ -58,17 +58,15 @@ def openai_rag(question):
     #find the api-key
     tavily_api_key=getenv("TAVILY_API_KEY",'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')
 
-    #此处由于我的电脑不知道为什么获取不到环境变量所以手动命名来测试
-    #tavily = TavilyClient(api_key="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")
-
     tavily = TavilyClient(api_key=tavily_api_key)
 
+    #set search domain
+    domains=["www.eia.gov","ww2.arb.ca.gov","www.iata.org","biofuels-news.com","www.spglobal.com","commission.europa.eu"]
+
     #first use tavily to surf answer
-    res=tavily.search(question)
-
-    #res is a dictionary, get the results
-    results=res['results']
-
+    #there are total six domains for search, each pick the highest two scores
+    index=0
+    
     #generate context
     context="<context>"
     #count for counting id
@@ -78,16 +76,32 @@ def openai_rag(question):
     #add url list
     url_list=""
 
-    #use for loop to get every element in the results dict
-    for item in results:
-        content=item['content']
-        line="\n"+f"""<doc id={count}> """+content+"</doc>"
-        context=context+line
-        reference_line="\n"+f"""- [[{count}] """+item['title']+f"""]({item['url']})"""
-        reference=reference+reference_line
-        url_line=f"""[\[{count}\]]: {item['url']}"""+"\n"
-        url_list=url_list+url_line
-        count=count+1
+    for i in domains:
+        #select each index as result
+        res=tavily.search(question,include_domains=[domains[index]])
+        index=index+1
+
+        #res is a dictionary, get the results
+        results=res['results']
+        #we want the first two item in results dict
+        #count the number to determine the break
+        break_number=1
+
+        #use for loop to get every element in the results dict
+        for item in results:
+            content=item['content']
+            line="\n"+f"""<doc id={count}> """+content+"</doc>"
+            context=context+line
+            reference_line="\n"+f"""- [[{count}] """+item['title']+f"""]({item['url']})"""
+            reference=reference+reference_line
+            url_line=f"""[\[{count}\]]: {item['url']}"""+"\n"
+            url_list=url_list+url_line
+            count=count+1
+            #each time we finished the context, test if we already run twice
+            if break_number==2:
+                break
+            break_number=break_number+1
+
 
     #results is a list with several dictionary in each index
     current_time=datetime.now()
