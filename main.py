@@ -22,6 +22,12 @@ async def search_futures_news(request: Request):
     res=openai_rag(question)
     return { "response": res, "status": "success" }
 
+@app.post("/search_biodiesel_information")
+async def search_biodiesel_information(request: Request):
+    data = await request.json()
+    question = data.get("question")
+    res=openai_rag(question)
+    return { "response": res, "status": "success" }
 
 if __name__ == "__main__":
   import uvicorn
