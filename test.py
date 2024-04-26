@@ -16,7 +16,7 @@ embeddings= OpenAIEmbeddings(openai_api_base=OPENAI_BASE_URL,
 vectorstore = ElasticsearchStore(
     embedding=embeddings,
     index_name="langchain-demo",
-    es_connection="jq.debian.typist.cc:9200"
+    es_url="https://jq.debian.typist.cc:9200"
 )
 
 question="what is biofuel"
