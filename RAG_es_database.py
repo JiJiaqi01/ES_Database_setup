@@ -71,7 +71,7 @@ def openai_rag(question):
     url_list=""
 
     #first use tavily to surf answer
-    res=tavily.search(question)
+    #res=tavily.search(question)
 
     #use es to search using mmr(choose from mmr and similarity)
     res=vectorstore.search(question,"mmr")
