@@ -1,4 +1,4 @@
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings,OpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate

@@ -7,8 +7,7 @@ from elasticsearch import Elasticsearch
 from langchain_elasticsearch import ElasticsearchStore
 from langchain_core.documents.base import Document
 #use log to find errors while running
-import logging
-logger=logging.getLogger()
+from logger import logger
 
 headers={
     "User_Agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
@@ -103,8 +102,6 @@ for xml in xml_list:
 
 
 #建立一个log用于输出程序错误
-with open("log.txt","w") as f:
-    f.write("This is a log."+"\n"+"\n")
 
 index_count=-1
 #现在网页获取完毕，对每个网页调用store_es
@@ -114,10 +111,8 @@ for url in sitemap_set:
     try:
         store_es(url)
     except Exception as e:
-        index=str(index_count)
+        print(e)
         logger.error(e)
-        with open("log.txt","a") as f:
-            f.write("index "+index+" error:"+"\n"+e+"\n")
 
         
     
