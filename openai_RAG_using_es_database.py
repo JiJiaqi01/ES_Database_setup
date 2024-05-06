@@ -96,8 +96,12 @@ def openai_rag_es(question):
         #assume the indices store url is url
         url_source=item.metadata
         url=url_source['url']
+        try:
+            title=url_source['title']
+        except:
+            title=content[0:50]+"..."
         #
-        reference_line="\n"+f"""- [[{count}] """+f"""]({url})"""
+        reference_line="\n"+f"""- [[{count}] """+title+f"""]({url})"""
         reference=reference+reference_line
 
         #same way to get url

@@ -51,12 +51,17 @@ def store_es(url,headers=headers):
     #遍历response set去除<xxx> 保留文本
     for element in ele[0:-1]:
         full_text=full_text+element.get_text(separator="\n",strip=True)
-    
+    #获取标题
+    ele_title=soup.select('title')
+    title=""
+    for element in ele_title[0:-1]:
+        title=title+element.get_text(separator="\n",strip=True)
     #将该得到的数据text,html,url导入es,并用openai embedding向量化
     vectorstore.add_documents(documents=[Document(page_content=full_text,
                                                   metadata={
                                                       "url":url,
                                                       "html":html_text,
+                                                      "title":title,
                                                       }
                                                   )
                                          ]
@@ -114,5 +119,3 @@ for url in sitemap_set:
         print(e)
         logger.error(e)
 
-        
-    
