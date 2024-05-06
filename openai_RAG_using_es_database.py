@@ -23,7 +23,7 @@ embeddings= OpenAIEmbeddings(openai_api_base=OPENAI_BASE_URL,
 vectorstore = ElasticsearchStore(
     embedding=embeddings,
     #index_name只有一个,数据库存的啥这里填啥
-    index_name="text",
+    index_name="bio_database",
     es_url="http://jq.debian.typist.cc:9200",
     es_connection=es
 )
@@ -72,26 +72,26 @@ def openai_rag_es(question):
     #use es to search using mmr(choose from mmr and similarity)
     res=vectorstore.search(question,"mmr")
     #now we have our response, we want the content, and the url, stored in
-    #res['hits']['hits']['_source']
-    #res is a json dictionary, get the results
-    results=res['hits']['hits']
-    #hits hits is a list with several dictionary where include the results
-    
+    #res should be a list of documents
+
     #use for loop to get every element in the results dict
     for item in results:
         #the indices that store text information, assuming text
         #the only problem is the text may be the entire page,
         #我不知道数据库是怎么安放文本内容的，不知道是不是全部内容还是部分
-        content=item['_source']['text']
+        content=item.page_content
         line="\n"+f"""<doc id={count}> """+content+"</doc>"
         context=context+line
 
         #assume the indices store url is url
-        reference_line="\n"+f"""- [[{count}] """+item['title']+f"""]({item['_source']['url']})"""
+        url_source=item.metadata
+        url=url_source['url']
+        #
+        reference_line="\n"+f"""- [[{count}] """+f"""]({url})"""
         reference=reference+reference_line
 
         #same way to get url
-        url_line=f"""[\[{count}\]]: {item['_source']['url']}"""+"\n"
+        url_line=f"""[\[{count}\]]: {url}"""+"\n"
         url_list=url_list+url_line
         count=count+1
     
