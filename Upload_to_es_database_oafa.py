@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import json
+from time import sleep
 from langchain_openai import OpenAIEmbeddings
 from elasticsearch import Elasticsearch
 from langchain_elasticsearch import ElasticsearchStore
@@ -53,9 +54,8 @@ def store_es(url,headers=headers):
         full_text=full_text+element.get_text(separator="\n",strip=True)
     #获取标题
     ele_title=soup.select('title')
-    title=""
-    for element in ele_title[0:-1]:
-        title=title+element.get_text(separator="\n",strip=True)
+    element=ele_title[0]
+    title=element.get_text(separator="\n",strip=True)
     #将该得到的数据text,html,url导入es,并用openai embedding向量化
     vectorstore.add_documents(documents=[Document(page_content=full_text,
                                                   metadata={
@@ -113,6 +113,8 @@ index_count=-1
 for url in sitemap_set:
     #这一步用来确定哪个url出问题了,可通过index寻找
     index_count=index_count+1
+    #sleep for a while防止频率太高不让访问了
+    sleep(2)
     try:
         store_es(url)
     except Exception as e:
