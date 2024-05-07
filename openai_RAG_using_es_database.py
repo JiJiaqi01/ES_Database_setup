@@ -85,7 +85,7 @@ def openai_rag_es(question):
     #res should be a list of documents
 
     #use for loop to get every element in the results dict
-    for item in results:
+    for item in res:
         #the indices that store text information, assuming text
         #the only problem is the text may be the entire page,
         #我不知道数据库是怎么安放文本内容的，不知道是不是全部内容还是部分
