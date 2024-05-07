@@ -13,15 +13,12 @@ OPENAI_API_KEY="sk-AUnJk0FMih4MJp32GAyNzEQRi5KtVeiZlvRU6tROmaOAFvD9"
 OPENAI_MODEL="gpt-3.5-turbo-0125"
 OPENAI_EMBEDDING_MODEL="text-embedding-3-small"
 
-es=Elasticsearch(hosts=["http://172.29.0.15:9200"],
-                 es_user="elastic",
-                 es_password="aidd123A",
-                )
-
 #create openai_embedding
 embeddings= OpenAIEmbeddings(openai_api_base=OPENAI_BASE_URL,
                              openai_api_key=OPENAI_API_KEY,
                              model=OPENAI_EMBEDDING_MODEL)
+
+es=Elasticsearch(hosts=["http://172.29.0.15:9200"])
 
 #run this on virtual (域名和http格式不一致)
 vectorstore = ElasticsearchStore(
@@ -29,9 +26,10 @@ vectorstore = ElasticsearchStore(
     #index_name只有一个,数据库存的啥这里填啥
     index_name="bio_database",
     es_url="http://172.29.0.15:9200",
-    es_connection=es
+    es_user="elastic",
+    es_password="aidd123A",
+    es_connection=es,
 )
-
 
 
 #create a template for the chatbot
