@@ -26,13 +26,13 @@ embeddings= OpenAIEmbeddings(openai_api_base=OPENAI_BASE_URL,
                              model=OPENAI_EMBEDDING_MODEL)
 
 #es=elasticsearch.Elasticsearch(hosts=["http://elastic:aidd123A@172.29.0.15:9200"])
-es=elasticsearch.Elasticsearch(hosts=["http://172.29.0.15:9200"])
+es=elasticsearch.Elasticsearch(hosts=["http://172.29.0.10:9200"])
 #run this on virtual (域名和http格式不一致)
 vectorstore = ElasticsearchStore(
     embedding=embeddings,
     #index_name只有一个,数据库存的啥这里填啥
     index_name="bio_database",
-    es_url="http://172.29.0.15:9200",
+    es_url="http://172.29.0.10:9200",
     #es_user="elastic",
     #es_password="aidd123A",
     es_connection=es,
