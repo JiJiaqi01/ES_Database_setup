@@ -26,7 +26,7 @@ embeddings= OpenAIEmbeddings(openai_api_base=OPENAI_BASE_URL,
                              model=OPENAI_EMBEDDING_MODEL)
 
 #es=elasticsearch.Elasticsearch(hosts=["http://elastic:aidd123A@172.29.0.15:9200"])
-es=elasticsearch.Elasticsearch(hosts=["http://@172.29.0.15:9200"])
+es=elasticsearch.Elasticsearch(hosts=["http://172.29.0.15:9200"])
 #run this on virtual (域名和http格式不一致)
 vectorstore = ElasticsearchStore(
     embedding=embeddings,
