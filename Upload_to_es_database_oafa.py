@@ -4,7 +4,7 @@ import re
 import json
 from time import sleep
 from langchain_openai import OpenAIEmbeddings
-from elasticsearch import Elasticsearch
+import elasticsearch
 from langchain_elasticsearch import ElasticsearchStore
 from langchain_core.documents.base import Document
 #use log to find errors while running
@@ -25,7 +25,7 @@ embeddings= OpenAIEmbeddings(openai_api_base=OPENAI_BASE_URL,
                              openai_api_key=OPENAI_API_KEY,
                              model=OPENAI_EMBEDDING_MODEL)
 
-es=Elasticsearch(hosts=["http://elastic:aidd123A@172.29.0.15:9200"])
+es=elasticsearch.Elasticsearch(hosts=["http://elastic:aidd123A@172.29.0.15:9200"])
 
 #run this on virtual (域名和http格式不一致)
 vectorstore = ElasticsearchStore(
