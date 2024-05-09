@@ -24,13 +24,9 @@ OPENAI_EMBEDDING_MODEL="text-embedding-3-small"
 embeddings= OpenAIEmbeddings(openai_api_base=OPENAI_BASE_URL,
                              openai_api_key=OPENAI_API_KEY,
                              model=OPENAI_EMBEDDING_MODEL)
-"""
-es=Elasticsearch(hosts=["http://172.29.0.15:9200"],
-                 es_user="elastic",
-                 es_password="aidd123A",
-                 max_retries=10,
-                )
-"""
+
+es=Elasticsearch(hosts=["http://elastic:aidd123A@172.29.0.15:9200"])
+
 #run this on virtual (域名和http格式不一致)
 vectorstore = ElasticsearchStore(
     embedding=embeddings,
@@ -39,7 +35,7 @@ vectorstore = ElasticsearchStore(
     es_url="http://172.29.0.15:9200",
     es_user="elastic",
     es_password="aidd123A",
-    #es_connection=es,
+    es_connection=es,
 )
 
 
