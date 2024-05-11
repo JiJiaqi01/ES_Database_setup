@@ -111,7 +111,9 @@ for xml in xml_list:
 #this step is temporary due to program accidentally interrupted
 ##stopped at this url /publications/commission-implementing-decision-authorisation-disbursement-first-instalment-non-repayable-support_en
 #index 20709
-newset=sitemap_set[20709:]
+#https://commission.europa.eu/news/commission-launches-survey-collect-additional-feedback-electronic-invoicing-2023-05-24_en connection error 41 times
+#index 21183
+newset=sitemap_set[21183:]
 #建立一个log用于输出程序错误
 
 index_count=-1
