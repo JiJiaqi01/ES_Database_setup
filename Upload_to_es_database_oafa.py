@@ -108,12 +108,15 @@ for xml in xml_list:
         #去除<loc>,<\loc>
         sitemap_set.append(element.get_text(separator="\n",strip=True))
 
-
+#this step is temporary due to program accidentally interrupted
+##stopped at this url /publications/commission-implementing-decision-authorisation-disbursement-first-instalment-non-repayable-support_en
+#index 20709
+newset=sitemap_set[20709:]
 #建立一个log用于输出程序错误
 
 index_count=-1
 #现在网页获取完毕，对每个网页调用store_es
-for url in sitemap_set:
+for url in newset:    #sitemap_set:
     #这一步用来确定哪个url出问题了,可通过index寻找
     index_count=index_count+1
     #sleep for a while防止频率太高不让访问了
