@@ -113,9 +113,9 @@ for xml in xml_list:
 #index 20709
 #https://commission.europa.eu/news/commission-launches-survey-collect-additional-feedback-electronic-invoicing-2023-05-24_en connection error 41 times
 #index 21183
-#https://commission.europa.eu/publications/provisional-agenda-twelfth-meeting-specialised-committee-citizens-rights_en
-#index 21216
-newset=sitemap_set[21216:]
+#https://commission.europa.eu/publications/management-plan-2023-internal-market-industry-entrepreneurship-and-smes_en
+#index 21230
+newset=sitemap_set[21230:]
 #建立一个log用于输出程序错误
 
 index_count=-1
