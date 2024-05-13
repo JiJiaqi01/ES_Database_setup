@@ -120,7 +120,7 @@ newset=sitemap_set[21230:]
 
 index_count=-1
 #现在网页获取完毕，对每个网页调用store_es
-for url in newset:    #sitemap_set:
+for url in sitemap_set:
     #这一步用来确定哪个url出问题了,可通过index寻找
     index_count=index_count+1
     #sleep for a while防止频率太高不让访问了
