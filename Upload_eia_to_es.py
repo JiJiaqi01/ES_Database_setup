@@ -40,7 +40,17 @@ vectorstore = ElasticsearchStore(
     #es_password="aidd123A",
     es_connection=es,
 )
-
+#test if the url scraped from eia already stored or not
+def document_exists(url, es=es, index="bio_database"):
+    query = {
+        "query": {
+            "term": {
+                "metadata.url": url
+            }
+        }
+    }
+    response = es.search(index=index, body=query)
+    return response['hits']['total']['value'] > 0
 
 
 #建立函数方便爬取不同网页
@@ -112,17 +122,23 @@ def crawl(start_url):
             #这里的url都是没有爬过的
             #把这里的url爬取一下获取文本内容，使用try
             visited.add(url)
-            #此处输出的url都是新的，直接用这些url做爬取传输
-            #print(f"Visiting: {url}")
-            #url里面有些是下载链接 （xlsx）和重复网页 （#）不需要重复爬取
-            if "#" not in url:
-                try:
-                    #sleep for a while
-                    sleep(1)
-                    store_es(url)
-                except Exception as e:
-                    print(e)
-                    logger.error(e)
+            #做判断，此处输出的url都是未入库的，直接用这些url做爬取传输
+            if document_exists(url):
+                #print(f"Visiting: {url}")
+                #url里面有些是下载链接 （xlsx）和重复网页 （#）不需要重复爬取
+                if "#" not in url and not url.endswith((".xls", ".xlsx",".mp3",".csv",".zip")):
+                    try:
+                        #sleep for a while
+                        sleep(2)
+                        store_es(url)
+                    except Exception as e:
+                        print(e)
+                        logger.error(e)
+                else:
+                    print("Invalid url: "+url)
+            else:
+                print("Repeated url: "+url)
+            #now use loop to get the next url
             try:
                 for next_url in get_links(url, domain):
                     if next_url not in visited:
