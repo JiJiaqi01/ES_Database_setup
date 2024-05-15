@@ -45,7 +45,7 @@ def document_exists(url, es=es, index="bio_database"):
     query = {
         "query": {
             "term": {
-                "metadata.url": url
+                "metadata.url.keyword": url
             }
         }
     }
