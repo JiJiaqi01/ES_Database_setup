@@ -123,7 +123,7 @@ def crawl(start_url):
             #把这里的url爬取一下获取文本内容，使用try
             visited.add(url)
             #做判断，此处输出的url都是未入库的，直接用这些url做爬取传输
-            if document_exists(url):
+            if not document_exists(url):
                 #print(f"Visiting: {url}")
                 #url里面有些是下载链接 （xlsx）和重复网页 （#）不需要重复爬取
                 if "#" not in url and not url.endswith((".xls", ".xlsx",".mp3",".csv",".zip")):
