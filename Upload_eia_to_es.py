@@ -132,7 +132,7 @@ def crawl(start_url):
                         sleep(2)
                         store_es(url)
                     except Exception as e:
-                        print(e)
+                        print(e.with_traceback())
                         logger.error(e)
                 else:
                     print("Invalid url: "+url)
@@ -144,7 +144,7 @@ def crawl(start_url):
                     if next_url not in visited:
                         queue.append(next_url)
             except Exception as e:
-                print(e)
+                print(e.with_traceback())
                 logger.error(e)
 
 # Start the crawler
