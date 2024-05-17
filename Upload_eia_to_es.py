@@ -68,9 +68,12 @@ def store_es(url,headers=headers):
     for element in ele[0:-1]:
         full_text=full_text+element.get_text(separator="\n",strip=True)
     #获取标题
-    ele_title=soup.select('title')
-    element=ele_title[0]
-    title=element.get_text(separator="\n",strip=True)
+    try:
+        ele_title=soup.select('title')
+        element=ele_title[0]
+        title=element.get_text(separator="\n",strip=True)
+    except:
+        title=full_text[:40]+"..."
     #将该得到的数据text,html,url导入es,并用openai embedding向量化
     vectorstore.add_documents(documents=[Document(page_content=full_text,
                                                   metadata={
