@@ -82,6 +82,7 @@ def openai_rag_es(question):
     url_list=""
 
     #use es to search using mmr(choose from mmr and similarity)
+  #不确定search和similarity_search_by_vector有没有什么区别, similarity_search_by_vector(embeddings)
     res=vectorstore.search(question,"mmr")
     #now we have our response, we want the content, and the url, stored in
     #res should be a list of documents
