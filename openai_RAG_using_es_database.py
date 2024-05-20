@@ -72,7 +72,6 @@ prompt = PromptTemplate.from_template(template)
 #this function is for generating answer using RAG. input is the user's question
 def openai_rag_es(question):
     #use es database
-    
     #generate context
     context="<context>"
     #count for counting id
@@ -82,8 +81,12 @@ def openai_rag_es(question):
     #add url list
     url_list=""
 
+    #get_filter to refine the search
+    filters=get_filter(question)
+    #filters in format "keyword: xxxxxxxx\nlimit: xxxxxxx\n timerange:  xxxxxxx\n"
     #use es to search using mmr(choose from mmr and similarity)
-  #不确定search和similarity_search_by_vector有没有什么区别, similarity_search_by_vector(embeddings)
+    
+    #不确定search和similarity_search_by_vector有没有什么区别, similarity_search_by_vector(embeddings)
     res=vectorstore.search(question,"mmr")
     #now we have our response, we want the content, and the url, stored in
     #res should be a list of documents
@@ -112,7 +115,7 @@ def openai_rag_es(question):
         url_line=f"""[\[{count}\]]: {url}"""+"\n"
         url_list=url_list+url_line
         count=count+1
-    
+  
     #results is a list with several dictionary in each index
     current_time=datetime.now()
     cdate=str(current_time.year)+"/"+str(current_time.month)+"/"+str(current_time.day)
