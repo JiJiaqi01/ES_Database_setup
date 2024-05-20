@@ -69,6 +69,8 @@ def store_es(url,headers=headers):
     try:
         time_string=get_publish_date(url)
         date = datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ')
+        #存入日期字符串
+        date_str = date.strftime('%Y-%m-%dT%H:%M:%SZ')
     except:
         #尝试获取tag
         try:
@@ -77,9 +79,11 @@ def store_es(url,headers=headers):
             date_string=ele_date[0].get_text()
             #convert into same format
             date = datetime.strptime(date_string, "%d %B %Y")
+            #存入日期字符串
+            date_str = date.strftime('%Y-%m-%dT%H:%M:%SZ')
         except:
             #赋予空集
-            date=""
+            date_str=""
         
     #将该得到的数据text,html,url导入es,并用openai embedding向量化
     vectorstore.add_documents(documents=[Document(page_content=full_text,
@@ -87,7 +91,7 @@ def store_es(url,headers=headers):
                                                       "url":url,
                                                       "html":html_text,
                                                       "title":title,
-                                                      "date":date,
+                                                      "date":date_str,
                                                       }
                                                   )
                                          ]
