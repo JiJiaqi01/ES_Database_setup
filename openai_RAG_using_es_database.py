@@ -5,7 +5,7 @@ from langchain_core.prompts import PromptTemplate
 from datetime import datetime
 from elasticsearch import Elasticsearch
 from langchain_elasticsearch import ElasticsearchStore
-from Turn_into_structure import get_filter
+from turn_into_structure import get_filter
 
 #running local using docker
 
