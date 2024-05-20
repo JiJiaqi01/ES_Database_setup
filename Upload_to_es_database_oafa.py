@@ -44,19 +44,26 @@ vectorstore = ElasticsearchStore(
 
 
 #建立函数方便爬取不同网页
-def store_es(url,headers=headers):
+def store_es(url,index_count,headers=headers):
+    #biofuel-news要爬取 div itemprop='articleBody'， 用index判断 45895
     #url 为对应网页
     #返回页面源代码
     response=requests.get(url=url,headers=headers)
     html_text=response.text
     #用soup筛选<p>获取文本
     soup=BeautifulSoup(html_text,'html.parser')
-    ele=soup.select('p')
-    #用full_text来存储页面文本信息
-    full_text=""
-    #遍历response set去除<xxx> 保留文本
-    for element in ele[0:-1]:
-        full_text=full_text+element.get_text(separator="\n",strip=True)
+    if index_count<45895:
+        ele=soup.select('p')
+        #用full_text来存储页面文本信息
+        full_text=""
+        #遍历response set去除<xxx> 保留文本
+        for element in ele[0:-1]:
+            full_text=full_text+element.get_text(separator="\n",strip=True)
+    else:
+        ele=soup.find_all('div', itemprop='articleBody')
+        full_text=""
+        for element in ele:
+            full text=full_text+element.get_text()
     #获取标题
     try:
         ele_title=soup.select('title')
@@ -135,25 +142,19 @@ for xml in xml_list:
         #去除<loc>,<\loc>
         sitemap_set.append(element.get_text(separator="\n",strip=True))
 
-#this step is temporary due to program accidentally interrupted
-##stopped at this url /publications/commission-implementing-decision-authorisation-disbursement-first-instalment-non-repayable-support_en
-#index 20709
-#https://commission.europa.eu/news/commission-launches-survey-collect-additional-feedback-electronic-invoicing-2023-05-24_en connection error 41 times
-#index 21183
-#https://commission.europa.eu/publications/management-plan-2023-internal-market-industry-entrepreneurship-and-smes_en
-#index 21230
-newset=sitemap_set[21230:]
+
+#newset=sitemap_set[21230:]
 #建立一个log用于输出程序错误
 
 index_count=-1
 #现在网页获取完毕，对每个网页调用store_es
 for url in sitemap_set:
-    #这一步用来确定哪个url出问题了,可通过index寻找
+    #这一步用来确定在哪个url，如果是biofuel,要切换soup筛选方法
     index_count=index_count+1
     #sleep for a while防止频率太高不让访问了
     sleep(2)
     try:
-        store_es(url)
+        store_es(url,index_count)
     except Exception as e:
         print(e)
         logger.error(e)
