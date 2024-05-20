@@ -44,26 +44,26 @@ vectorstore = ElasticsearchStore(
 
 
 #建立函数方便爬取不同网页
-def store_es(url,index_count,headers=headers):
-    #biofuel-news要爬取 div itemprop='articleBody'， 用index判断 45895
+def store_es(url,headers=headers):
+    #biofuel-news要爬取 div itemprop='articleBody'， 用startwith判断 "https://biofuels-news.com"
     #url 为对应网页
     #返回页面源代码
     response=requests.get(url=url,headers=headers)
     html_text=response.text
     #用soup筛选<p>获取文本
     soup=BeautifulSoup(html_text,'html.parser')
-    if index_count<45895:
+    if url.startswith("https://biofuels-news.com/"):
+        ele=soup.find_all('div', itemprop='articleBody')
+        full_text=""
+        for element in ele:
+            full text=full_text+element.get_text()
+    else:
         ele=soup.select('p')
         #用full_text来存储页面文本信息
         full_text=""
         #遍历response set去除<xxx> 保留文本
         for element in ele[0:-1]:
             full_text=full_text+element.get_text(separator="\n",strip=True)
-    else:
-        ele=soup.find_all('div', itemprop='articleBody')
-        full_text=""
-        for element in ele:
-            full text=full_text+element.get_text()
     #获取标题
     try:
         ele_title=soup.select('title')
@@ -149,12 +149,12 @@ for xml in xml_list:
 index_count=-1
 #现在网页获取完毕，对每个网页调用store_es
 for url in sitemap_set:
-    #这一步用来确定在哪个url，如果是biofuel,要切换soup筛选方法
+    #这一步用来确定在哪个url 报错了
     index_count=index_count+1
     #sleep for a while防止频率太高不让访问了
     sleep(2)
     try:
-        store_es(url,index_count)
+        store_es(url)
     except Exception as e:
         print(e)
         logger.error(e)
