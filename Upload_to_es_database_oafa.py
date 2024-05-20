@@ -9,6 +9,8 @@ from langchain_elasticsearch import ElasticsearchStore
 from langchain_core.documents.base import Document
 #use log to find errors while running
 from logger import logger
+#use to get the date of the website to add keyword date
+from get_published_date import get_publish_date
 
 headers={
     "User_Agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
@@ -62,12 +64,19 @@ def store_es(url,headers=headers):
         title=element.get_text(separator="\n",strip=True)
     except:
         title=full_text[:40]+"..."
+    #获取时间
+    try:
+        time_string=get_publish_date(url)
+        date = datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%SZ')
+    except:
+        date=""
     #将该得到的数据text,html,url导入es,并用openai embedding向量化
     vectorstore.add_documents(documents=[Document(page_content=full_text,
                                                   metadata={
                                                       "url":url,
                                                       "html":html_text,
                                                       "title":title,
+                                                      "date":date,
                                                       }
                                                   )
                                          ]
