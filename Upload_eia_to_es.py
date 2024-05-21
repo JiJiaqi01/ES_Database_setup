@@ -65,7 +65,8 @@ def store_es(url,headers=headers):
     #用full_text来存储页面文本信息
     full_text=""
     #遍历response set去除<xxx> 保留文本
-    for element in ele[0:-1]:
+    #网页爬取ele[27:-2], 之前的都是一样的menu curel oil....etc. 去除重复部分方便搜索
+    for element in ele[27:-2]:
         full_text=full_text+element.get_text(separator="\n",strip=True)
     #获取标题
     try:
