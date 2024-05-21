@@ -80,15 +80,14 @@ def get_filter(question):
     If the question ask for latest, recent, or any other words similar to this meaning, generate a date range from 30 days ago to now, the time now is {current_utc_time}
     If anything else specific, calculate that date range using numbers of days from now.
     In any case, your answer should follow the time format: '%Y-%m-%dT%H:%M:%SZ' to '%Y-%m-%dT%H:%M:%SZ' 
-
+    
     Remember:
-    Your answer should be in the following format, the string in the "" is what you must remain unchanged, and I will
-    notate what you should response using (your answer)
+    Your answer should be in the following format, and I will notate what you should response using (your answer). Anything else should keep as the format
 
     The format is:
-    "Keyword: " (your answer)
-    "Limit: " (your answer)
-    "Time range" (your answer)
+    Keyword: (your answer)
+    Limit:  (your answer)
+    Time range: (your answer)
 
     question: {question}
 
@@ -137,15 +136,21 @@ def openai_rag_es(question):
     #split by \n
     key_list = filters.split("\n")
     time = key_list[2]
-    time_utc=time[12:-1].split("to")
-    index=0
-    for element in time_utc:
-       time_utc[index]=element.lstrip()
-       index=index+1
-    #now time_utc contains two element in utc format representing time range
-    start_date=time_utc[0]
-    end_date=time_utc[1]
-    #generate filter
+    #test if there is a condition
+    entry=time[12:]
+    if entry=="None":
+      #there is no time range
+      need_range=False
+    else:
+      time_utc=time[12:].split("to")
+      index=0
+      for element in time_utc:
+         time_utc[index]=element.lstrip()
+         index=index+1
+         #now time_utc contains two element in utc format representing time range
+      start_date=time_utc[0]
+      end_date=time_utc[1]
+      #generate filter
     filter=[
       {
       "range": {
