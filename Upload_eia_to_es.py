@@ -8,6 +8,7 @@ from langchain_openai import OpenAIEmbeddings
 from elasticsearch import Elasticsearch
 from langchain_elasticsearch import ElasticsearchStore
 from langchain_core.documents.base import Document
+from datetime import datetime, timezone, timedelta
 #use log to find errors while running
 from logger import logger
 
