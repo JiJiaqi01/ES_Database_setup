@@ -75,12 +75,25 @@ def store_es(url,headers=headers):
         title=element.get_text(separator="\n",strip=True)
     except:
         title=full_text[:40]+"..."
+    #获取时间
+    try:
+        #most websites should be able to get, some press in iata domain cannot, use soup to select
+        ele_date=soup.find_all('span', class_='date')
+        date_string=ele_date[0].get_text()
+        #convert into same format
+        date = datetime.strptime(date_string, "%d %B %Y")
+        #存入日期字符串
+        date_str = date.strftime('%Y-%m-%dT%H:%M:%SZ')
+    except:
+        #赋予空
+        date_str=""
     #将该得到的数据text,html,url导入es,并用openai embedding向量化
     vectorstore.add_documents(documents=[Document(page_content=full_text,
                                                   metadata={
                                                       "url":url,
                                                       "html":html_text,
                                                       "title":title,
+                                                      "date": date_str
                                                       }
                                                   )
                                          ]
