@@ -80,8 +80,9 @@ def store_es(url,headers=headers):
         #most websites should be able to get, some press in iata domain cannot, use soup to select
         ele_date=soup.find_all('span', class_='date')
         date_string=ele_date[0].get_text()
+        #should be look like April 23, 2022
         #convert into same format
-        date = datetime.strptime(date_string, "%d %B %Y")
+        date = datetime.strptime(date_string, "%B %d, %Y")
         #存入日期字符串
         date_str = date.strftime('%Y-%m-%dT%H:%M:%SZ')
     except:
