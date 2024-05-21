@@ -85,7 +85,7 @@ def store_es(url,headers=headers):
             ele_date=soup.find_all('div', class_='press-release-layout-date')
             date_string=ele_date[0].get_text()
             #convert into same format
-            date = datetime.strptime(date_string, "%B %d, %Y")
+            date = datetime.strptime(date_string, "%b %d, %Y")
             #存入日期字符串
             date_str = date.strftime('%Y-%m-%dT%H:%M:%SZ')
         except:
