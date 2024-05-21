@@ -2,7 +2,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings,OpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 from langchain_core.prompts import PromptTemplate
-from datetime import datetime
+from datetime import datetime,timedelta,timezone
 from elasticsearch import Elasticsearch
 from langchain_elasticsearch import ElasticsearchStore
 from turn_into_structure import get_filter
