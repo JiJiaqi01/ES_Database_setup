@@ -84,10 +84,31 @@ def openai_rag_es(question):
     #get_filter to refine the search
     filters=get_filter(question)
     #filters in format "keyword: xxxxxxxx\nlimit: xxxxxxx\n timerange:  xxxxxxx\n"
-    #use es to search using mmr(choose from mmr and similarity)
+    #split by \n
+    key_list = filters.split("\n")
+    time = key_list[2]
+    time_utc=time[12:-1].split("to")
+    index=0
+    for element in time_utc:
+       time_utc[index]=element.lstrip()
+       index=index+1
+    #now time_utc contains two element in utc format representing time range
+    start_date=time_utc[0]
+    end_date=time_utc[1]
+    #generate filter
+    filter=[
+      {
+      "range": {
+                "metadata.date": {
+                    "gte": start_date,
+                    "lte": end_date
+                }
+      }
+    ]
+    #use es to search using similarity(choose from mmr and similarity)
     
     #不确定search和similarity_search_by_vector有没有什么区别, similarity_search_by_vector(embeddings)
-    res=vectorstore.search(question,"mmr")
+    res=vectorstore.similarity_search(question,filter=filter)
     #now we have our response, we want the content, and the url, stored in
     #res should be a list of documents
 
