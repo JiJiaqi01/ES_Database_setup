@@ -92,7 +92,14 @@ def store_es(url,headers=headers):
         except:
             #赋予空集
             date_str=""
-        
+    #尝试添加检索关键词
+    #keyword有[biofuel,biodiesel,rins ，lcfs ，uco，carbon intensity score]
+    #查询文本full_text里面有没有这些词
+    key_type=""
+    if re.search("biofuel",full_text,re.IGNORECASE) or re.search("biofuel",title,re.IGNORECASE):
+        key_type=key_type+"biofuel,"
+    
+    
     #将该得到的数据text,html,url导入es,并用openai embedding向量化
     vectorstore.add_documents(documents=[Document(page_content=full_text,
                                                   metadata={
