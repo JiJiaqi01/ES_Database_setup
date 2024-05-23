@@ -75,6 +75,7 @@ def get_filter(question):
     #现在template只有三个keyword,后续可加入，但是由于是metadata进行filter,入库的时候估计还得添加额外内容
     template = """You are here to help me to interpret a question and response with several key points:
     1. What is the key information this question is asking for, response with format  "keyword: " following with a term not exceed five words
+    Your answer should be choosen from biofuels,biodiesel,carbon intensity,low carbon fuel standard,renewable fuels, renewable identification number,used cooking oil, if you cannot match any of those, answer None
     2. How many returns does this question ask for,response with format  "Limit: " following with a number, if no number specific, answer 5
     3. Is there any date information required in the question, such as "latest", "year 2022" if there is, response with the format "Time range: " and add the time condition
     If the question ask for latest, recent, or any other words similar to this meaning, generate a date range from 30 days ago to now, the time now is {current_utc_time}
@@ -151,7 +152,7 @@ def openai_rag_es(question):
         need_range=True
         #generate filter
     if need_range:
-        filter=[
+        filter1=[
             {
               "range": {
                   "metadata.date": {
@@ -159,7 +160,8 @@ def openai_rag_es(question):
                       "lte": end_date
                       }
                   }
-              ]
+            }
+        ]
     #find limit
     limit_line=key_list[1]
     limit=limit_line[7:].strip()
@@ -168,7 +170,23 @@ def openai_rag_es(question):
 
     #now do the keyword filter, filtering metadata.type (biofuels,biodisel,low carbon fuel, rins, uco, carbon intensity score)
     #these meta data will be added while adding documents in the elastic search
-    
+    type_line=key_list[0]
+    type=type_line[8:].lstrip()
+    if type=="None":
+        need_type=False
+    else:
+        need_type=True
+    if need_type:
+        filter2=[
+            {
+                "match": {
+                    "metadata.type": {
+                        "query": type, 
+                        "fuzziness": "AUTO"
+                    }
+                }
+            }
+        ]
     #use es to search using similarity(choose from mmr and similarity)
     
     #不确定search和similarity_search_by_vector有没有什么区别, similarity_search_by_vector(embeddings)
