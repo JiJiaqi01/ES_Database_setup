@@ -122,6 +122,7 @@ def store_es(url,headers=headers):
                                                       "html":html_text,
                                                       "title":title,
                                                       "date":date_str,
+                                                      "type":key_type
                                                       }
                                                   )
                                          ]
