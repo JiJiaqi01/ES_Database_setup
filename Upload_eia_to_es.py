@@ -89,13 +89,37 @@ def store_es(url,headers=headers):
     except:
         #赋予空
         date_str=""
+    #尝试添加检索关键词
+    #keyword有[biofuel,biodiesel,rins ，lcfs ，uco，carbon intensity score]
+    #查询文本full_text里面有没有这些词
+    key_type=""
+    if re.search("biofuel",full_text,re.IGNORECASE) or re.search("biofuel",title,re.IGNORECASE):
+        key_type=key_type+"biofuel,"
+    if re.search("biodiesel",full_text,re.IGNORECASE) or re.search("biodiesel",title,re.IGNORECASE):
+        key_type=key_type+"biodiesel,"
+    #LCFS
+    if re.search("low carbon fuel",full_text,re.IGNORECASE) or re.search("low carbon fuel",title,re.IGNORECASE):
+        key_type=key_type+"low carbon fuel,LCFS"
+    #RFS
+    if re.search("renewable fuel",full_text,re.IGNORECASE) or re.search("renewable fuel",title,re.IGNORECASE):
+        key_type=key_type+"renewable fuel,RFS,"
+    #RINS
+    if re.search("renewable identification number",full_text,re.IGNORECASE) or re.search("renewable identification number",title,re.IGNORECASE):
+        key_type=key_type+"renewable identification number, RINS,"
+    #used cooking oil, UCO
+    if re.search("used cooking oil",full_text,re.IGNORECASE) or re.search("used cooking oil",title,re.IGNORECASE):
+        key_type=key_type+"used cooking oil,UCO"
+    #carbon intensity score,
+    if re.search("carbon intensity",full_text,re.IGNORECASE) or re.search("carbon intensity",title,re.IGNORECASE):
+        key_type=key_type+"carbon intensity,"
     #将该得到的数据text,html,url导入es,并用openai embedding向量化
     vectorstore.add_documents(documents=[Document(page_content=full_text,
                                                   metadata={
                                                       "url":url,
                                                       "html":html_text,
                                                       "title":title,
-                                                      "date": date_str
+                                                      "date": date_str,
+                                                      "type": key_type
                                                       }
                                                   )
                                          ]
