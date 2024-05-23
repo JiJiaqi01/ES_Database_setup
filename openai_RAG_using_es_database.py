@@ -165,6 +165,10 @@ def openai_rag_es(question):
     #find limit
     limit_line=key_list[1]
     limit=limit_line[7:].strip()
+    try:
+        limit=int(limit)
+    except:
+        limit=5
     #now limit should contain a number
     #while do the search try use k= limit and except k to default
 
@@ -187,10 +191,26 @@ def openai_rag_es(question):
                 }
             }
         ]
+    #now we have filter1 and filter2 combine them
+    need_filter=True
+    if need_type and need_range:
+        filter=filter1+filter2
+    if need_type and not need_range:
+        #only need type
+        filter=filter2
+    if need_range and not need_type:
+        filter=filter1
+    if not need_range and not need_type:
+        #if no filter specified, perform search without filter
+        need_filter=False
     #use es to search using similarity(choose from mmr and similarity)
     
     #不确定search和similarity_search_by_vector有没有什么区别, similarity_search_by_vector(embeddings)
-    res=vectorstore.similarity_search(question,filter=filter)
+    if need_filter:
+        res=vectorstore.similarity_search(question,filter=filter,k=limit)
+    else:
+        #no filter param needed
+        res=vectorstore.similarity_search(question,k=limit)
     #now we have our response, we want the content, and the url, stored in
     #res should be a list of documents
 
