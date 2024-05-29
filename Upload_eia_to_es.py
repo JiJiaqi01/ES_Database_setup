@@ -35,7 +35,8 @@ es=Elasticsearch(hosts=["http://172.29.0.10:9200"])
 vectorstore = ElasticsearchStore(
     embedding=embeddings,
     #index_name只有一个,数据库存的啥这里填啥
-    index_name="bio_database",
+    #index_name="bio_database",
+    index_name="bio_database_new",
     es_url="http://172.29.0.10:9200",
     #es_user="elastic",
     #es_password="aidd123A",
