@@ -58,7 +58,7 @@ def store_es(url,headers=headers):
         ele=soup.find_all('div', itemprop='articleBody')
         full_text=""
         for element in ele:
-            full text=full_text+element.get_text()
+            full_text=full_text+element.get_text()
     else:
         ele=soup.select('p')
         #用full_text来存储页面文本信息
