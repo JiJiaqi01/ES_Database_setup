@@ -32,7 +32,7 @@ es=elasticsearch.Elasticsearch(hosts=["http://172.29.0.10:9200"])
 vectorstore = ElasticsearchStore(
     embedding=embeddings,
     #index_name只有一个,数据库存的啥这里填啥
-    index_name="bio_database",
+    index_name="bio_database_new",
     es_url="http://172.29.0.10:9200",
     #es_user="elastic",
     #es_password="aidd123A",
@@ -70,7 +70,7 @@ def store_es(url):
         #get the html_text first
         html_text=page.content()
         browser.close()
-        
+
     #用soup和ele筛选
     soup=BeautifulSoup(html_text,'html.parser')
     ele=soup.select('p')
@@ -78,7 +78,7 @@ def store_es(url):
     full_text=""
     #遍历response set去除<xxx> 保留文本
     for element in ele:
-        full_text=full_text+element.get_text(separator="\n",strip=True)  
+        full_text=full_text+element.get_text(separator="\n",strip=True)
     #full text stores text, html text stores raw
     title_ele=soup.select('title')
     title=title_ele[0].get_text(separator="\n",strip=True)
@@ -92,7 +92,7 @@ def store_es(url):
                                                   )
                                          ]
                               )
-    
+
 
 def get_urls(xml):
     with sync_playwright() as driver:
@@ -123,7 +123,3 @@ for xml in xmls:
     except Exception as e:
         print(e)
         logger.error(e)
-    
-      
-      
-

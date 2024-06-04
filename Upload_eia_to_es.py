@@ -43,7 +43,7 @@ vectorstore = ElasticsearchStore(
     es_connection=es,
 )
 #test if the url scraped from eia already stored or not
-def document_exists(url, es=es, index="bio_database"):
+def document_exists(url, es=es, index="bio_database_new"):
     query = {
         "query": {
             "term": {
